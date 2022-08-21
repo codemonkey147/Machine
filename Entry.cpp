@@ -14,6 +14,7 @@ int main() {
     Program.push_back({OP_ADD, REGISTER_1, REGISTER_2});
     Program.push_back({OP_ADD, REGISTER_1, REGISTER_2});
     Program.push_back({OP_ADD, REGISTER_1, REGISTER_2});
+    Program.push_back({OP_SUB, REGISTER_1, REGISTER_2});
 
     machine.Mov(&machine.R1, somevalue_1);
     machine.Mov(&machine.R2, somevalue_2);

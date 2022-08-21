@@ -3,17 +3,10 @@
 
 
 void Machine::DecodeInstruction(Instruction & Inst) {
+
     int op_code = Inst.OPCODE;
-    REGRef _r1 = nullptr;
-    REGRef _r2 = nullptr;
-
-    if(Inst.REG_1 == REGISTER_1) {
-        _r1 = &R1;
-    }
-
-    if(Inst.REG_2 == REGISTER_2) {
-        _r2 = &R2;
-    }
+    REGRef _r1 = DecodeRegisterOp(Inst.REG_1);
+    REGRef _r2 = DecodeRegisterOp(Inst.REG_2);
 
     if(op_code == OP_MOV) {
         std::cout << "mov detected " << std::endl;
@@ -27,8 +20,25 @@ void Machine::DecodeInstruction(Instruction & Inst) {
         return;
     }
 
+    if(op_code == OP_SUB) {
+        std::cout << "sub detected " << std::endl;
+        Sub(_r1, _r2);
+        return;
+    }
 
     std::cout << "unknown op" << std::endl;
+}
+
+REGRef Machine::DecodeRegisterOp(REG _r) {
+    switch(_r) {
+        case REGISTER_1:
+            return &R1;
+        case REGISTER_2:
+            return &R2;
+        case REGISTER_3:
+            return &R3;
+    }
+    return nullptr;
 }
 
 void Machine::Mov(REGRef a, REGRef b) {
