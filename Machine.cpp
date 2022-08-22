@@ -14,9 +14,23 @@ void Machine::DecodeInstruction(Instruction & Inst) {
         return;
     }
 
+    if(op_code == OP_MOV_IMM) {
+        std::cout << "mov IMM detected " << std::endl;
+        char imm = Inst.IMMVal;
+        Mov(_r1, imm);
+        return;
+    }
+
     if(op_code == OP_ADD) {
         std::cout << "add detected " << std::endl;
         Add(_r1, _r2);
+        return;
+    }
+
+    if(op_code == OP_ADD_IMM) {
+        std::cout << "add IMM detected " << std::endl;
+        char imm = Inst.IMMVal;
+        Add(_r1, imm);
         return;
     }
 
@@ -25,6 +39,7 @@ void Machine::DecodeInstruction(Instruction & Inst) {
         Sub(_r1, _r2);
         return;
     }
+
 
     std::cout << "unknown op" << std::endl;
 }
@@ -37,6 +52,8 @@ REGRef Machine::DecodeRegisterOp(REG _r) {
             return &R2;
         case REGISTER_3:
             return &R3;
+        case REGISTER_OUT:
+            return &OUT;
     }
     return nullptr;
 }
@@ -46,13 +63,18 @@ void Machine::Mov(REGRef a, REGRef b) {
     SP++;
 }
 
-void Machine::Mov(REGRef a, int b) {
+void Machine::Mov(REGRef a, char b) {
     *a = b;
     SP++;
 }
 
 void Machine::Add(REGRef a, REGRef b) {
     *a = *a + *b;
+    SP++;
+}
+
+void Machine::Add(REGRef a, char b) {
+    *a = *a + b;
     SP++;
 }
 
