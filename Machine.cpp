@@ -1,6 +1,6 @@
 #include "Machine.hpp"
 #include <iostream>
-
+#include <vector>
 
 void Machine::DecodeInstruction(Instruction & Inst) {
 
@@ -40,6 +40,17 @@ void Machine::DecodeInstruction(Instruction & Inst) {
         return;
     }
 
+    if(op_code == OP_CMPEQ) {
+        std::cout << "cmp detected " << std::endl;
+        CmpEQ(_r1, _r2);
+        return;
+    }
+
+    if(op_code == OP_RET) { 
+        std::cout << "ret detected " << std::endl;
+        return;
+    }
+
 
     std::cout << "unknown op" << std::endl;
 }
@@ -58,33 +69,57 @@ REGRef Machine::DecodeRegisterOp(REG _r) {
     return nullptr;
 }
 
+Instruction & Machine::GetNextInstruction() {
+    return Memory[IP];
+}
+
+void Machine::LoadProgram(const std::vector<Instruction> & Program) {
+    Memory = Program;
+}
+
+void Machine::Execute() {
+    Instruction Next = {0, 0, 0};
+    while (Next.OPCODE != OP_RET) {
+        Next = GetNextInstruction();
+        DecodeInstruction(Next);
+    }
+    std::cout << "Program Finished Executing." << std::endl;
+}
+
 void Machine::Mov(REGRef a, REGRef b) {
     a = b;
-    SP++;
+    IP++;
 }
 
 void Machine::Mov(REGRef a, char b) {
     *a = b;
-    SP++;
+    IP++;
 }
 
 void Machine::Add(REGRef a, REGRef b) {
     *a = *a + *b;
-    SP++;
+    IP++;
 }
 
 void Machine::Add(REGRef a, char b) {
     *a = *a + b;
-    SP++;
+    IP++;
 }
 
 void Machine::Sub(REGRef a, REGRef b) {
     *a = *a - *b;
-    SP++;
+    IP++;
+}
+
+void Machine::CmpEQ(REGRef a, REGRef b) {
+    if (*a == *b) {
+        Flags.CMP = 1;
+    }
+    IP++;
 }
 
 REG Machine::Out(REGRef a) {
     OUT = *a;
-    SP++;
+    IP++;
     return OUT;
 }
