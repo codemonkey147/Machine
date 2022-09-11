@@ -40,9 +40,9 @@ void Machine::DecodeInstruction(Instruction & Inst) {
         return;
     }
 
-    if(op_code == OP_CMPEQ) {
+    if(op_code == OP_CMP) {
         std::cout << "cmp detected " << std::endl;
-        CmpEQ(_r1, _r2);
+        Cmp(_r1, _r2);
         return;
     }
 
@@ -93,7 +93,7 @@ void Machine::LoadProgram(const std::vector<Instruction> & Program) {
 
 void Machine::Execute() {
     Instruction Next = {0, 0, 0};
-    int MaxCount = 20;
+    size_t MaxCount = 20;
     while (Next.OPCODE != OP_RET || IP > MaxCount) {
         Next = GetNextInstruction();
         DecodeInstruction(Next);
@@ -137,8 +137,9 @@ void Machine::Sub(REGRef a, REGRef b) {
     IP++;
 }
 
-void Machine::CmpEQ(REGRef a, REGRef b) {
-    if (*a == *b) {
+void Machine::Cmp(REGRef a, REGRef b) {
+    int cmp_result = *a - *b;
+    if (cmp_result == 0) {
         Flags.CMP = 1;
     }
     IP++;

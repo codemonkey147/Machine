@@ -9,9 +9,9 @@ int main() {
     std::vector<Instruction> Program;
     Program.push_back({OP_MOV_IMM, REGISTER_1, 55});
     Program.push_back({OP_MOV_IMM, REGISTER_2, 7});
-    Program.push_back({OP_CMPEQ, REGISTER_1, REGISTER_2});
+    Program.push_back({OP_CMP, REGISTER_1, REGISTER_2});
     Program.push_back({OP_MOV_IMM, REGISTER_2, 55});
-    Program.push_back({OP_CMPEQ, REGISTER_1, REGISTER_2});
+    Program.push_back({OP_CMP, REGISTER_1, REGISTER_2});
     Program.push_back({OP_JAE, 0, 5});
     Program.push_back({OP_ADD, REGISTER_1, REGISTER_2});
     Program.push_back({OP_ADD, REGISTER_1, REGISTER_2});
@@ -36,7 +36,7 @@ int main() {
     // loop
     ProgramLoop.push_back({OP_ADD_IMM, REGISTER_2, 1});
     ProgramLoop.push_back({OP_ADD, REGISTER_3, REGISTER_2});
-    ProgramLoop.push_back({OP_CMPEQ, REGISTER_1, REGISTER_2});
+    ProgramLoop.push_back({OP_CMP, REGISTER_1, REGISTER_2});
     ProgramLoop.push_back({OP_JNE, 0, -3});
 
     ProgramLoop.push_back({OP_MOV, REGISTER_OUT, REGISTER_3});

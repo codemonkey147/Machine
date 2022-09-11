@@ -16,7 +16,7 @@ using REGRef = REG *;
 #define OP_MOV_IMM 4
 #define OP_ADD_IMM 5
 #define OP_SUB_IMM 6
-#define OP_CMPEQ 7
+#define OP_CMP 7
 #define OP_JAE 8
 #define OP_JNE 9
 #define OP_RET 15
@@ -28,11 +28,13 @@ using REGRef = REG *;
 
 
 struct EFlags {
-    EFlags() : OF(0), UF(0), CMP(0) {}
+    EFlags() : OF(0), UF(0), CF(0), ZF(0), CMP(0) {}
     FLAGReg OF : 1;
     FLAGReg UF : 1;
+    FLAGReg CF : 1;
+    FLAGReg ZF : 1;
     FLAGReg CMP : 1;
-    FLAGReg : 1;
+    FLAGReg : 3;
 };
 
 // 2-byte aligned instruction 
@@ -78,7 +80,7 @@ class Machine {
         void Add(REGRef a, REGRef b);
         void Add(REGRef a, char b);
         void Sub(REGRef a, REGRef b);
-        void CmpEQ(REGRef a, REGRef b);
+        void Cmp(REGRef a, REGRef b);
         void Jae(char offset);
         void Jne(char offset);
 
