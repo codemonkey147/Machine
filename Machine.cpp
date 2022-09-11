@@ -46,6 +46,20 @@ void Machine::DecodeInstruction(Instruction & Inst) {
         return;
     }
 
+    if(op_code == OP_JAE) {
+        std::cout << "JAE detected " << std::endl;
+        char jmp_offset = Inst.IMMVal;
+        Jae(jmp_offset);
+        return;
+    }
+
+    if (op_code == OP_JNE) {
+        std::cout << "JNE detected " << std::endl;
+        char jmp_offset = Inst.IMMVal;
+        Jne(jmp_offset);
+        return;
+    }
+
     if(op_code == OP_RET) { 
         std::cout << "ret detected " << std::endl;
         return;
@@ -79,10 +93,22 @@ void Machine::LoadProgram(const std::vector<Instruction> & Program) {
 
 void Machine::Execute() {
     Instruction Next = {0, 0, 0};
-    while (Next.OPCODE != OP_RET) {
+    int MaxCount = 20;
+    while (Next.OPCODE != OP_RET || IP > MaxCount) {
         Next = GetNextInstruction();
         DecodeInstruction(Next);
+        std::cout << IP << std::endl;
     }
+    std::cout << "Program Finished Executing." << std::endl;
+}
+
+void Machine::Reset() {
+    IP = 0;
+    Flags.CMP = 0;
+    Flags.OF = 0;
+    Flags.UF = 0;
+    Memory.clear(); 
+
     std::cout << "Program Finished Executing." << std::endl;
 }
 
@@ -114,6 +140,25 @@ void Machine::Sub(REGRef a, REGRef b) {
 void Machine::CmpEQ(REGRef a, REGRef b) {
     if (*a == *b) {
         Flags.CMP = 1;
+    }
+    IP++;
+}
+void Machine::Jae(char offset) {
+    if (offset != 0 && Flags.CMP == 1) {
+        IP += offset;
+        std::cout << "The value of the Instruction Pointer post Jump is: " << IP << std::endl;
+        Flags.CMP = 0;
+        return;
+    }
+    IP++;
+}
+
+void Machine::Jne(char offset) {
+    if (offset != 0 && Flags.CMP == 0) {
+        IP += offset;
+        std::cout << "The value of the Instruction Pointer post Jump is: " << IP << std::endl;
+        Flags.CMP = 0;
+        return;
     }
     IP++;
 }

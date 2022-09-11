@@ -9,6 +9,7 @@ using REG = unsigned int;
 using FLAGReg = unsigned int;
 using REGRef = REG *;
 
+#define OP_RESERVED 0
 #define OP_MOV 1
 #define OP_ADD 2
 #define OP_SUB 3
@@ -16,7 +17,9 @@ using REGRef = REG *;
 #define OP_ADD_IMM 5
 #define OP_SUB_IMM 6
 #define OP_CMPEQ 7
-#define OP_RET 8
+#define OP_JAE 8
+#define OP_JNE 9
+#define OP_RET 15
 
 #define REGISTER_1 1
 #define REGISTER_2 2
@@ -54,6 +57,7 @@ class Machine {
         void DecodeInstruction(Instruction & Inst);
         void LoadProgram(const std::vector<Instruction> & Program);
         void Execute();
+        void Reset();
 
         REG Out(REGRef);
 
@@ -75,6 +79,8 @@ class Machine {
         void Add(REGRef a, char b);
         void Sub(REGRef a, REGRef b);
         void CmpEQ(REGRef a, REGRef b);
+        void Jae(char offset);
+        void Jne(char offset);
 
         REG IP;
         EFlags Flags;
