@@ -2,6 +2,11 @@
 #include <iostream>
 #include <vector>
 
+// planning to change all std::iostream to fmtlib
+#define FMT_HEADER_ONLY
+#include "fmt/include/fmt/core.h"
+fmt::print("Fmt says mov is detected! {} \n", "yay");
+
 void Machine::DecodeInstruction(Instruction & Inst) {
 
     int op_code = Inst.OPCODE;
