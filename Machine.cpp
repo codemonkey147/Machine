@@ -1,11 +1,9 @@
 #include "Machine.hpp"
-#include <iostream>
 #include <vector>
 
 // planning to change all std::iostream to fmtlib
 #define FMT_HEADER_ONLY
 #include "fmt/include/fmt/core.h"
-fmt::print("Fmt says mov is detected! {} \n", "yay");
 
 void Machine::DecodeInstruction(Instruction & Inst) {
 
@@ -14,64 +12,63 @@ void Machine::DecodeInstruction(Instruction & Inst) {
     REGRef _r2 = DecodeRegisterOp(Inst.REG_2);
 
     if(op_code == OP_MOV) {
-        std::cout << "mov detected " << std::endl;
+        fmt::print("mov detected\n");
         Mov(_r1, _r2);
         return;
     }
 
     if(op_code == OP_MOV_IMM) {
-        std::cout << "mov IMM detected " << std::endl;
+        fmt::print("mov IMM detected\n");
         char imm = Inst.IMMVal;
         Mov(_r1, imm);
         return;
     }
 
     if(op_code == OP_ADD) {
-        std::cout << "add detected " << std::endl;
+        fmt::print("add detected\n");
         Add(_r1, _r2);
         return;
     }
 
     if(op_code == OP_ADD_IMM) {
-        std::cout << "add IMM detected " << std::endl;
+        fmt::print("add IMM detected\n");
         char imm = Inst.IMMVal;
         Add(_r1, imm);
         return;
     }
 
     if(op_code == OP_SUB) {
-        std::cout << "sub detected " << std::endl;
+        fmt::print("sub detected\n");
         Sub(_r1, _r2);
         return;
     }
 
     if(op_code == OP_CMP) {
-        std::cout << "cmp detected " << std::endl;
+        fmt::print("cmp detected\n");
         Cmp(_r1, _r2);
         return;
     }
 
     if(op_code == OP_JAE) {
-        std::cout << "JAE detected " << std::endl;
+        fmt::print("JAE detected\n");
         char jmp_offset = Inst.IMMVal;
         Jae(jmp_offset);
         return;
     }
 
     if (op_code == OP_JNE) {
-        std::cout << "JNE detected " << std::endl;
+        fmt::print("JNE detected\n");
         char jmp_offset = Inst.IMMVal;
         Jne(jmp_offset);
         return;
     }
 
     if(op_code == OP_RET) { 
-        std::cout << "ret detected " << std::endl;
+        fmt::print("ret detected\n");
         return;
     }
 
-
-    std::cout << "unknown op" << std::endl;
+    fmt::print("unknown op\n");
 }
 
 REGRef Machine::DecodeRegisterOp(REG _r) {
@@ -102,9 +99,9 @@ void Machine::Execute() {
     while (Next.OPCODE != OP_RET || IP > MaxCount) {
         Next = GetNextInstruction();
         DecodeInstruction(Next);
-        std::cout << IP << std::endl;
+        fmt::print("{}\n", IP);
     }
-    std::cout << "Program Finished Executing." << std::endl;
+    fmt::print("Program finished executing.\n");
 }
 
 void Machine::Reset() {
@@ -114,7 +111,8 @@ void Machine::Reset() {
     Flags.UF = 0;
     Memory.clear(); 
 
-    std::cout << "Program Finished Executing." << std::endl;
+    
+    fmt::print("*** machine has been reset ***\n\n");
 }
 
 void Machine::Mov(REGRef a, REGRef b) {
@@ -152,7 +150,7 @@ void Machine::Cmp(REGRef a, REGRef b) {
 void Machine::Jae(char offset) {
     if (offset != 0 && Flags.CMP == 1) {
         IP += offset;
-        std::cout << "The value of the Instruction Pointer post Jump is: " << IP << std::endl;
+        fmt::print("The value of IP post jump is: {}\n", IP);
         Flags.CMP = 0;
         return;
     }
@@ -162,7 +160,7 @@ void Machine::Jae(char offset) {
 void Machine::Jne(char offset) {
     if (offset != 0 && Flags.CMP == 0) {
         IP += offset;
-        std::cout << "The value of the Instruction Pointer post Jump is: " << IP << std::endl;
+        fmt::print("The value of IP post jump is: {}\n", IP);
         Flags.CMP = 0;
         return;
     }

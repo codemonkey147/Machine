@@ -1,7 +1,11 @@
 #include "Machine.hpp"
 // #include <fmt/format.h>
-#include <iostream>
 #include <vector>
+
+#ifndef FMT_HEADER_ONLY
+#define FMT_HEADER_ONLY
+#include "fmt/include/fmt/core.h"
+#endif
 
 int main() {
 
@@ -24,7 +28,7 @@ int main() {
     Machine.LoadProgram(Program);
     Machine.Execute();
 
-    std::cout << Machine.Out(&Machine.R1) << std::endl;
+    fmt::print("{}\n", Machine.Out(&Machine.R1));
     Machine.Reset();
     
 
@@ -45,8 +49,7 @@ int main() {
     Machine.LoadProgram(ProgramLoop);
     Machine.Execute();
 
-    std::cout << "The sum of the digits 1 to 10 is: ";
-    std::cout << Machine.Out(&Machine.R3) << std::endl;
+    fmt::print("The sum of the digits 1 to 9 is: {} \n", Machine.Out(&Machine.R3));
     Machine.Reset();
 
     return 0;
